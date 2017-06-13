@@ -1,3 +1,5 @@
+Project idei is to compare working hours in different timezones.
+
 # vue-cli
 
 > A Vue.js project

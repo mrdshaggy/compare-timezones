@@ -90,6 +90,7 @@
         <option value="$PROJECT_DIR$/src/components/choose-location.vue" />
         <option value="$PROJECT_DIR$/src/components/timezone-map.vue" />
         <option value="$PROJECT_DIR$/src/components/watch.vue" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -264,12 +265,12 @@
       <option name="presentableId" value="Default" />
       <updated>1497357500248</updated>
       <workItem from="1497357508526" duration="279000" />
-      <workItem from="1497357859280" duration="5353000" />
+      <workItem from="1497357859280" duration="5541000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5632000" />
+    <option name="totallyTimeSpent" value="5820000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1535" height="876" extended-state="6" />
@@ -369,6 +370,17 @@
         <state relative-caret-position="105">
           <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="64" lean-forward="false" selection-start-line="0" selection-start-column="64" selection-end-line="0" selection-end-column="64" />
+            <folding />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
