@@ -1,4 +1,4 @@
-Project idei is to compare working hours in different timezones.
+Project idea is to compare working hours in different timezones.
 
 # vue-cli
 

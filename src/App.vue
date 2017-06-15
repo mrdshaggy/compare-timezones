@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <h1>{{ msg }}</h1>
+        <user-location></user-location>
         <choose-location></choose-location>
         <watch></watch>
         <timezone-map></timezone-map>
@@ -13,7 +14,7 @@
     export default {
         data: function() {
             return {
-                msg: 'Welcome to Your Vue.js App'
+                msg: 'Welcome to CompareTimeZone App'
             }
         },
         methods: {
