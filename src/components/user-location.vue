@@ -1,11 +1,12 @@
 <template>
     <div>
         <div v-if="show">
+            <p v-for="key in user.coords">{{key}}</p>
             <p>Your location: {{ user.location }}</p>
-            <p>Your timezone: {{ user.timezone }}</p>
-            <p>Your current time: {{ userCurrentTime() }}</p>
+            <p>Your time: {{ user.currentTime }}</p>
+            <p></p>
         </div>
-        <button @click="getMyLocation">Get my location</button>
+        <button @click="getUserLocation">Get User Info</button>
     </div>
 </template>
 
@@ -15,71 +16,66 @@
             return {
                 text: 'Your location',
                 user: {
-                    latitud: '',
-                    longitud: '',
+                    coords: [],
                     location: '',
-                    timezone: '',
                     currentTime: '',
                 },
                 customer: {
+                    coords: [],
                     location: '',
-                    timezone: '',
                     currentTime: '',
                 },
-                show: false,
+                show: true,
             }
         },
+        beforeMount: function () {
+            this.getUserCoords();
+        },
         mounted: function () {
-            this.checkLocation();
-//            this.checkTimezone();
+//            this.getUserLocation();
         },
         methods: {
-            getMyLocation() {
-                this.checkTimezone();
-                this.show = true;
+            getUserLocation() {
+                var uc = this.user.coords.toString();
+                this.user.location = this.getCity(uc);
+                this.user.currentTime = this.getTime(uc);
             },
-            checkLocation() {
+            getUserCoords() {
+                var arr = this.user.coords;
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(this.getLocation, this.locationFailed);
-                    console.log('Location found');
+                    navigator.geolocation.getCurrentPosition(showCoords);
+                } else {
+                    alert("Geolocation is not supported by this browser.");
                 }
-                else {
-                    this.user.location = "You don't have geolocation";
+                function showCoords(position) {
+                    arr.push(position.coords.latitude, position.coords.longitude);
+                    console.log(arr.toString());
                 }
             },
-            getLocation(position) {
-                this.user.latitud = position.coords.latitude;
-                this.user.longitud = position.coords.longitude;
-                fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + this.user.latitud + ',' + this.user.longitud + '&sensor=false')
-                    .then(data => {
-                    return data.json();
-                }).then(json => {
-//                    console.log(json);
-                    var city = json.results[0].address_components[3].long_name,
-                        country = json.results[7].formatted_address,
-                        userLocation = (city + ', ' + country);
-                    this.user.location = userLocation;
-                });
-            },
-            locationFailed() {
-                document.write("We didn't get your location. Please check your settings");
-            },
-            checkTimezone() {
-                var lat = this.user.latitud,
-                    long = this.user.longitud;
-
-                console.log(lat, long, 'a');
-                fetch('https://maps.googleapis.com/maps/api/timezone/json?location=' + lat + ',' + long + '&timestamp=' + (Math.round((new Date().getTime())/1000)).toString() + '&sensor=false')
+            getCity(coords) {
+                fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coords + '&sensor=false')
                     .then(data => {
                         return data.json();
                     }).then(json => {
-//                        console.log(json);
-                        this.user.timezone = json.timeZoneName + ' (' + json.timeZoneId + ')';
+                        var city = json.results[0].address_components[3].long_name,
+                            country = json.results[7].formatted_address,
+                            location = (city + ', ' + country);
+                        console.log(location);
                 });
             },
-            userCurrentTime() {
-                var t = new Date();
-                return t.getTime();
+            getTime(coords) {
+                var targetDate = new Date(),
+                    timestamp = targetDate.getTime() / 1000 + targetDate.getTimezoneOffset() * 60,
+                    apicall = 'https://maps.googleapis.com/maps/api/timezone/json?location=' + coords + '&timestamp=' + timestamp + '&sensor=false';
+
+                fetch(apicall)
+                    .then(data => {
+                        return data.json();
+                    }).then(json => {
+                        var offsets = json.dstOffset * 1000 + json.rawOffset * 1000,
+                            localdate = new Date(timestamp * 1000 + offsets);
+                        console.log(localdate.toLocaleString());
+                });
             },
         }
     }
