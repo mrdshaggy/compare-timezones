@@ -14,7 +14,7 @@
     export default {
         data: function() {
             return {
-                msg: 'Welcome to CompareTimeZone App'
+                msg: 'Welcome to CompareTimeZone App',
             }
         },
         methods: {

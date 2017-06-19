@@ -1,12 +1,12 @@
 <template>
     <div>
         <div v-if="show">
-            <p v-for="key in user.coords">{{key}}</p>
+            <!--<p v-for="key in user.coords">{{key}}</p>-->
             <p>Your location: {{ user.location }}</p>
             <p>Your time: {{ user.currentTime }}</p>
             <p></p>
         </div>
-        <button @click="getUserLocation">Get User Info</button>
+
     </div>
 </template>
 
@@ -20,19 +20,19 @@
                     location: '',
                     currentTime: '',
                 },
-                customer: {
-                    coords: [],
-                    location: '',
-                    currentTime: '',
-                },
                 show: true,
             }
         },
-        beforeMount: function () {
+        created: function () {
             this.getUserCoords();
         },
         mounted: function () {
-//            this.getUserLocation();
+            var $this = this;
+            setTimeout(function () {
+                $this.getUserLocation();
+            },1000);
+
+
         },
         methods: {
             getUserLocation() {
@@ -49,10 +49,10 @@
                 }
                 function showCoords(position) {
                     arr.push(position.coords.latitude, position.coords.longitude);
-                    console.log(arr.toString());
                 }
             },
             getCity(coords) {
+                var $this = this;
                 fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coords + '&sensor=false')
                     .then(data => {
                         return data.json();
@@ -60,10 +60,11 @@
                         var city = json.results[0].address_components[3].long_name,
                             country = json.results[7].formatted_address,
                             location = (city + ', ' + country);
-                        console.log(location);
+                        $this.user.location = location;
                 });
             },
             getTime(coords) {
+                var $this = this;
                 var targetDate = new Date(),
                     timestamp = targetDate.getTime() / 1000 + targetDate.getTimezoneOffset() * 60,
                     apicall = 'https://maps.googleapis.com/maps/api/timezone/json?location=' + coords + '&timestamp=' + timestamp + '&sensor=false';
@@ -74,7 +75,7 @@
                     }).then(json => {
                         var offsets = json.dstOffset * 1000 + json.rawOffset * 1000,
                             localdate = new Date(timestamp * 1000 + offsets);
-                        console.log(localdate.toLocaleString());
+                        $this.user.currentTime = localdate.toLocaleString();
                 });
             },
         }
